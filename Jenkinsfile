@@ -30,124 +30,125 @@ pipeline {
                 label 'master'
             }
             steps {
-                   script {                    
-                    load "${env.CONFIGFILE}"
-                }         
+                echo 'Helloooo'
+                //    script {                    
+                //     load "${env.CONFIGFILE}"
+                // }         
             }            
         }
 
-        stage('Code checkout') {
-            agent { 
-                label 'master'
-            }
-            options {
-                skipDefaultCheckout true
-            }
-            steps {
+        // stage('Code checkout') {
+        //     agent { 
+        //         label 'master'
+        //     }
+        //     options {
+        //         skipDefaultCheckout true
+        //     }
+        //     steps {
                 
-                script {
-                    if ("${env.CLEAN_WORKSPACE}" == 'YES'){
+        //         script {
+        //             if ("${env.CLEAN_WORKSPACE}" == 'YES'){
 
-                        //Recreate/clean the workspace if there is any package update in terms of version change
-                        cleanWs()
+        //                 //Recreate/clean the workspace if there is any package update in terms of version change
+        //                 cleanWs()
 
-                        echo "Workspace cleanup done"
-                    }
-                }
+        //                 echo "Workspace cleanup done"
+        //             }
+        //         }
 
                 
-                dir("workspace"){
-                    git branch: "${env.SCM_BRANCH}", changelog: false, credentialsId: "${env.SCM_CRED}", poll: false, url: "${env.SCM_URL}" 
-                }               
-            }
+        //         dir("workspace"){
+        //             git branch: "${env.SCM_BRANCH}", changelog: false, credentialsId: "${env.SCM_CRED}", poll: false, url: "${env.SCM_URL}" 
+        //         }               
+        //     }
             
-        }
+        // }
         
-        stage('Package Installation') {
-            agent { 
-                label 'master'
-            }
-            options {
-                skipDefaultCheckout true
-            }
-            steps {
-                dir("workspace"){
-                    //bat 'del /F /Q package-lock.json'
-                    nodejs('nodejs') {
-                        bat 'npm run-script'
-                        bat 'npm audit fix'
-                        bat 'npm install'
-                    }
-                }
-            }
+        // stage('Package Installation') {
+        //     agent { 
+        //         label 'master'
+        //     }
+        //     options {
+        //         skipDefaultCheckout true
+        //     }
+        //     steps {
+        //         dir("workspace"){
+        //             //bat 'del /F /Q package-lock.json'
+        //             nodejs('nodejs') {
+        //                 bat 'npm run-script'
+        //                 bat 'npm audit fix'
+        //                 bat 'npm install'
+        //             }
+        //         }
+        //     }
             
-        }
+        // }
 
-        stage('Code Build') {
-            agent { 
-                label 'master'
-            }
-            options {
-                skipDefaultCheckout true
-            }
-            steps {
-                dir("workspace"){
-                    nodejs('nodejs') {
-                        bat "ng build --prod --aot --base-href=${env.BASE_HREF}"
-                    }                
-                }
-            }
+        // stage('Code Build') {
+        //     agent { 
+        //         label 'master'
+        //     }
+        //     options {
+        //         skipDefaultCheckout true
+        //     }
+        //     steps {
+        //         dir("workspace"){
+        //             nodejs('nodejs') {
+        //                 bat "ng build --prod --aot --base-href=${env.BASE_HREF}"
+        //             }                
+        //         }
+        //     }
             
-        }
+        // }
         
-        stage('Create Artifacts') {
-            agent { 
-                label 'master'
-            }
-            options {
-                skipDefaultCheckout true
-            }
-            steps {
-                dir("workspace"){
-                    bat "${env.ZIP_EXE} a  -tzip bundle.zip dist/${env.SOURCE_FOLDER}"
-                    stash includes:'bundle.zip', name:'buildArtifacts'
-                }
-            }
+        // stage('Create Artifacts') {
+        //     agent { 
+        //         label 'master'
+        //     }
+        //     options {
+        //         skipDefaultCheckout true
+        //     }
+        //     steps {
+        //         dir("workspace"){
+        //             bat "${env.ZIP_EXE} a  -tzip bundle.zip dist/${env.SOURCE_FOLDER}"
+        //             stash includes:'bundle.zip', name:'buildArtifacts'
+        //         }
+        //     }
             
-        }
+        // }
         
-        stage('Code Deploy') {
-            agent {
-                label "${env.INSTANCE}"
-            }
-            options {
-                skipDefaultCheckout true
-            }
-            steps {
+        // stage('Code Deploy') {
+        //     agent {
+        //         label "${env.INSTANCE}"
+        //     }
+        //     options {
+        //         skipDefaultCheckout true
+        //     }
+        //     steps {
                    
-                        unstash 'buildArtifacts'
+        //                 unstash 'buildArtifacts'
                     
-                    //Extract the bundle       
-                        bat "${env.ZIP_EXE} x  bundle.zip  -aoa"
+        //             //Extract the bundle       
+        //                 bat "${env.ZIP_EXE} x  bundle.zip  -aoa"
                     
-                    //Take bkp of existing app before pasting the new content
-                        dir("${env.BKP_FOLDER}"){
-                          bat "md ${env.DATE_TIME}"
-                          bat "xcopy ${env.TARGET_FOLDER} ${env.DATE_TIME} /E/H/C/I/y"
-                        }
+        //             //Take bkp of existing app before pasting the new content
+        //                 dir("${env.BKP_FOLDER}"){
+        //                   bat "md ${env.DATE_TIME}"
+        //                   bat "xcopy ${env.TARGET_FOLDER} ${env.DATE_TIME} /E/H/C/I/y"
+        //                 }
                     
-                    //Delete content before pasting the new content
-                        dir("${env.TARGET_FOLDER}"){ 
-    		                bat "FOR %%I IN (*) DO IF NOT %%I == env.js IF NOT %%I == web.config IF NOT %%I == Web.config DEL %%I"
-    		                bat 'FOR /D %%p IN (*) DO rmdir "%%p" /s /q'
-    		                //bat "del /q ${env.TARGET_FOLDER}\\*"
-    		                //bat 'FOR /D %%p IN (*) DO IF NOT %%p == imp rmdir "%%p" /s /q'
-                        }
+        //             //Delete content before pasting the new content
+        //                 dir("${env.TARGET_FOLDER}"){ 
+    	// 	                bat "FOR %%I IN (*) DO IF NOT %%I == env.js IF NOT %%I == web.config IF NOT %%I == Web.config DEL %%I"
+    	// 	                bat 'FOR /D %%p IN (*) DO rmdir "%%p" /s /q'
+    	// 	                //bat "del /q ${env.TARGET_FOLDER}\\*"
+    	// 	                //bat 'FOR /D %%p IN (*) DO IF NOT %%p == imp rmdir "%%p" /s /q'
+        //                 }
                         
                     
-                    //Paste the new content
-                        bat "xcopy %WORKSPACE%\\dist\\${env.SOURCE_FOLDER} ${env.TARGET_FOLDER} /E/H/C/I/y/exclude:${env.EXCLUDE_FILE_PATH} "
-            }          
-        }
+        //             //Paste the new content
+        //                 bat "xcopy %WORKSPACE%\\dist\\${env.SOURCE_FOLDER} ${env.TARGET_FOLDER} /E/H/C/I/y/exclude:${env.EXCLUDE_FILE_PATH} "
+        //     }          
+        // }
     }
 }
