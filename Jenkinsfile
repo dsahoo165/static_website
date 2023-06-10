@@ -36,7 +36,21 @@ pipeline {
                    accessKeyVariable:'AWS_ACCESS_KEY_ID',
                    secretKeyVariable:'AWS_SECRET_ACCESS_KEY'
                    ]]){
-		      sh "aws s3 cp / s3://deepaksahoo.in.website"	
+			// now you are on slave labeled with 'label'
+    def workspace = WORKSPACE
+    // ${workspace} will now contain an absolute path to job workspace on slave
+
+    workspace = env.WORKSPACE
+    // ${workspace} will still contain an absolute path to job workspace on slave
+
+    // When using a GString at least later Jenkins versions could only handle the env.WORKSPACE variant:
+    echo "Current workspace is ${env.WORKSPACE}"
+
+    // the current Jenkins instances will support the short syntax, too:
+    echo "Current workspace is $WORKSPACE"
+			
+			
+		      //sh "aws s3 cp / s3://deepaksahoo.in.website"	
                       sh "aws s3 ls" 
                       sh "aws ec2 describe-instances"
                    }         
