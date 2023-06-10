@@ -25,8 +25,7 @@ pipeline {
 
     stages {
 
-        stage('Set Configuration') {
-            agent none
+        stage('Set Configuration') {            
             steps {
                 sh 'docker ps -a'
                 //    script {                    
