@@ -28,7 +28,7 @@ pipeline {
         stage('Set Configuration') {
             agent none
             steps {
-                echo 'Helloooo'
+                sh 'docker ps -a'
                 //    script {                    
                 //     load "${env.CONFIGFILE}"
                 // }         
