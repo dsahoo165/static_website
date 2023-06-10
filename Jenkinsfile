@@ -1,5 +1,5 @@
 pipeline {
-    agent none
+    agent any
     
     /*Params needs to be added to Jenkins UI*/
     //parameters {    
