@@ -44,7 +44,7 @@ pipeline {
     echo "Current workspace is $WORKSPACE"
 			
 			
-		      //sh "aws s3 cp / s3://deepaksahoo.in.website"	
+		      sh "aws s3 cp ${env.WORKSPACE} s3://deepaksahoo.in.website"	
                       sh "aws s3 ls" 
                       sh "aws ec2 describe-instances"
                    }         
