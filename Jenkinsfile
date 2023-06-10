@@ -27,6 +27,8 @@ pipeline {
 
         stage('Set Configuration') {            
             steps {
+		    sh 'pwd'
+		    sh 'ls'
                 sh 'docker ps -a'
                 withCredentials([[
                    $class:'AmazonWebServicesCredentialsBinding',
