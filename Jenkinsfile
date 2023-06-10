@@ -28,9 +28,15 @@ pipeline {
         stage('Set Configuration') {            
             steps {
                 sh 'docker ps -a'
-                //    script {                    
-                //     load "${env.CONFIGFILE}"
-                // }         
+                withCredentials([[
+                   $class:'AmazonWebServicesCredentialsBinding',
+                   credentialsId:'jenkins-user',
+                   accessKeyVariable:'AWS_ACCESS_KEY_ID',
+                   secretKeyVariable:'AWS_SECRET_ACCESS_KEY'
+                   ]]){
+                      sh "aws s3 ls" 
+                      sh "aws ec2 describe-instances"
+                   }         
             }            
         }
 
@@ -147,5 +153,11 @@ pipeline {
         //                 bat "xcopy %WORKSPACE%\\dist\\${env.SOURCE_FOLDER} ${env.TARGET_FOLDER} /E/H/C/I/y/exclude:${env.EXCLUDE_FILE_PATH} "
         //     }          
         // }
+	    
+	    post { 
+		always { 
+		    deleteDir()
+		}
+   	 }
     }
 }
