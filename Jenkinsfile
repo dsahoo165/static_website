@@ -43,8 +43,8 @@ pipeline {
     // the current Jenkins instances will support the short syntax, too:
     echo "Current workspace is $WORKSPACE"
 			
-			
-		      sh "aws s3 cp ${env.WORKSPACE} s3://deepaksahoo.in.website --recursive"	
+		    //sh "aws s3 cp ${env.WORKSPACE} s3://deepaksahoo.in.website --recursive"
+		      sh "aws s3 cp app s3://deepaksahoo.in.website --recursive"	
                       sh "aws s3 ls" 
                       sh "aws ec2 describe-instances"
                    }         
