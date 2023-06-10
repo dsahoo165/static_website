@@ -26,9 +26,7 @@ pipeline {
     stages {
 
         stage('Set Configuration') {
-            agent { 
-                label 'master'
-            }
+            agent none
             steps {
                 echo 'Helloooo'
                 //    script {                    
