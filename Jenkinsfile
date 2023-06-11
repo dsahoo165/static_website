@@ -45,7 +45,7 @@ pipeline {
 			
 		    //sh "aws s3 cp ${env.WORKSPACE} s3://deepaksahoo.in.website --recursive"
 			
-			sh "npm -v"
+			//sh "npm -v"
 		      //sh "aws s3 rm s3://deepaksahoo.in.website --recursive"
 		      //sh "aws s3 cp app s3://deepaksahoo.in.website --recursive"			
 			
