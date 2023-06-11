@@ -44,8 +44,11 @@ pipeline {
     echo "Current workspace is $WORKSPACE"
 			
 		    //sh "aws s3 cp ${env.WORKSPACE} s3://deepaksahoo.in.website --recursive"
-		      sh "aws s3 rm s3://deepaksahoo.in.website --recursive"
-		      sh "aws s3 cp app s3://deepaksahoo.in.website --recursive"	
+			
+			sh "npm -v"
+		      //sh "aws s3 rm s3://deepaksahoo.in.website --recursive"
+		      //sh "aws s3 cp app s3://deepaksahoo.in.website --recursive"			
+			
                       sh "aws s3 ls" 
                       sh "aws ec2 describe-instances"
                    }         
