@@ -10,25 +10,18 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: '$(System.DefaultWorkingDirectory)/'
-    includeRootFolder: false
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    replaceExistingArchive: true
-  displayName: 'Archive Artifact'
-
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '$(Build.ArtifactStagingDirectory)'
+    SourceFolder: '$(Build.SourcesDirectory)/'
     Contents: '**'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)/drop'
-  displayName: 'Copy Artifact'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+  displayName: 'Copy Files to Staging Directory'
 
-- task: PublishBuildArtifacts@1
+- task: WindowsMachineFileCopy@2
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/drop'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
-  displayName: 'Publish Artifact'  
+    SourcePath: '$(Build.ArtifactStagingDirectory)'
+    MachineNames: 'DevOps-WinTest-vm'
+    AdminUserName: 'deepak.sahoo'
+    AdminPassword: 'Welcome$2024'
+    TargetPath: 'C:\apps\IIS_dir\html'
+  displayName: 'Copy Files to VM Virtual Directory'
