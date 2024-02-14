@@ -20,7 +20,7 @@ steps:
 - task: WindowsMachineFileCopy@2
   inputs:
     SourcePath: '$(Build.ArtifactStagingDirectory)'
-    MachineNames: '20.41.216.8'
+    MachineNames: 'DevOps-WinTest-vm'
     AdminUserName: 'deepak.sahoo'
     AdminPassword: 'Welcome$2024'
     TargetPath: 'C:\apps\IIS_dir\html'
