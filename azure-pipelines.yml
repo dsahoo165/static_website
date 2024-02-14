@@ -7,21 +7,27 @@ trigger:
 - main
 
 pool:
-  vmImage: windows-latest
+  vmImage: ubuntu-latest
 
-steps:
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(System.DefaultWorkingDirectory)/'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
+  displayName: 'Archive Artifact'
+
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '$(Build.SourcesDirectory)/'
+    SourceFolder: '$(Build.ArtifactStagingDirectory)'
     Contents: '**'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-  displayName: 'Copy Files to Staging Directory'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/drop'
+  displayName: 'Copy Artifact'
 
-- task: WindowsMachineFileCopy@2
+- task: PublishBuildArtifacts@1
   inputs:
-    SourcePath: '$(Build.ArtifactStagingDirectory)'
-    MachineNames: 'DevOps-WinTest-vm'
-    AdminUserName: 'deepak.sahoo'
-    AdminPassword: 'Welcome$2024'
-    TargetPath: 'C:\apps\IIS_dir\html'
-  displayName: 'Copy Files to VM Virtual Directory'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/drop'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+  displayName: 'Publish Artifact'  
